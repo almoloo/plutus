@@ -1,0 +1,3 @@
+/*
+	this file is used to fetch the data from the server and the smart contract
+*/

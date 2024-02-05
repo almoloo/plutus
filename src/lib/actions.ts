@@ -1,0 +1,3 @@
+/*
+	This file is used to define the actions that can be dispatched in the application. 
+*/
