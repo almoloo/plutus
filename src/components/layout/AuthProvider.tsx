@@ -1,9 +1,6 @@
 "use client";
 import type { AuthContextType } from "@/lib/definitions";
 import { createContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/app/store";
-import type { UserInfo } from "@particle-network/auth";
 import { ParticleNetwork, WalletEntryPosition } from "@particle-network/auth";
 import { ParticleProvider } from "@particle-network/provider";
 import { AvalancheTestnet, Avalanche } from "@particle-network/chains";
@@ -47,8 +44,6 @@ export default function AuthProvider({
       return userInfo;
     } catch (error) {
       console.error(error);
-      // return a comprehensive error
-
       return null;
     }
   };
@@ -75,7 +70,7 @@ export default function AuthProvider({
     if (particle.auth.isLogin()) {
       console.log("🔥", await particle.auth.getUserInfo());
       setAuthInfo({
-        isAuthenticated: particle.auth.isLogin(),
+        isAuthenticated: true,
         user: await particle.auth.getUserInfo(),
         ethers: ethersProvider,
         ethersSigner: ethersSigner,
@@ -84,7 +79,7 @@ export default function AuthProvider({
       });
     } else {
       setAuthInfo({
-        isAuthenticated: particle.auth.isLogin(),
+        isAuthenticated: false,
         user: null,
         ethers: ethersProvider,
         ethersSigner: ethersSigner,
