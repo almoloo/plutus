@@ -7,9 +7,17 @@ import type { BrowserProvider, JsonRpcSigner } from "ethers";
 
 export type AuthContextType = {
   isAuthenticated: boolean;
-  user: UserInfo | null;
+  user: User | null;
   ethers: BrowserProvider | null;
   ethersSigner: Promise<JsonRpcSigner> | null;
   login: () => Promise<UserInfo | null>;
   logout: () => Promise<void>;
 };
+
+export interface User {
+  uuid: string;
+  email?: string;
+  name?: string;
+  created_at?: Date;
+  address: string;
+}

@@ -1,11 +1,13 @@
 "use client";
-import type { AuthContextType } from "@/lib/definitions";
+import type { AuthContextType, User } from "@/lib/definitions";
 import { createContext, useEffect, useState } from "react";
 import { ParticleNetwork, WalletEntryPosition } from "@particle-network/auth";
 import { ParticleProvider } from "@particle-network/provider";
 import { AvalancheTestnet, Avalanche } from "@particle-network/chains";
 import { ethers } from "ethers";
 import type { BrowserProvider, JsonRpcSigner } from "ethers";
+import { sql } from "@vercel/postgres";
+import { createUser, getUser } from "@/lib/actions";
 
 const selectedNetwork =
   process.env.NEXT_PUBLIC_TESTNET === "true" ? AvalancheTestnet : Avalanche;
@@ -39,7 +41,9 @@ export default function AuthProvider({
 }: Readonly<{ children: React.ReactNode }>) {
   const handleLogin = async () => {
     try {
-      const userInfo = await particle.auth.login();
+      const userInfo = await particle.auth.login({
+        preferredAuthType: "google",
+      });
       await connect();
       return userInfo;
     } catch (error) {
@@ -68,15 +72,27 @@ export default function AuthProvider({
 
   const connect = async () => {
     if (particle.auth.isLogin()) {
-      console.log("🔥", await particle.auth.getUserInfo());
+      const userInfo = await particle.auth.getUserInfo();
+      console.log("🔥", userInfo);
+      const user: User = {
+        uuid: userInfo?.uuid!,
+        email: userInfo?.google_email,
+        address: userInfo?.wallets[0].public_address!,
+        name: userInfo?.name,
+      };
       setAuthInfo({
         isAuthenticated: true,
-        user: await particle.auth.getUserInfo(),
+        user,
         ethers: ethersProvider,
         ethersSigner: ethersSigner,
         login: handleLogin,
         logout: handleLogout,
       });
+      const userExists = await getUser(user.uuid);
+      if (!userExists) {
+        const createdUser = await createUser(user);
+        console.log("🎾", createdUser);
+      }
     } else {
       setAuthInfo({
         isAuthenticated: false,
