@@ -8,8 +8,9 @@ import type { BrowserProvider, JsonRpcSigner } from "ethers";
 export type AuthContextType = {
   isAuthenticated: boolean;
   user: User | null;
+  getUserInfo: () => Promise<UserInfo | null> | null;
   ethers: BrowserProvider | null;
-  ethersSigner: Promise<JsonRpcSigner> | null;
+  ethersSigner: () => Promise<JsonRpcSigner | null> | null;
   login: () => Promise<UserInfo | null>;
   logout: () => Promise<void>;
 };

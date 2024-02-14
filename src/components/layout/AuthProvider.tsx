@@ -6,7 +6,6 @@ import { ParticleProvider } from "@particle-network/provider";
 import { AvalancheTestnet, Avalanche } from "@particle-network/chains";
 import { ethers } from "ethers";
 import type { BrowserProvider, JsonRpcSigner } from "ethers";
-import { sql } from "@vercel/postgres";
 import { createUser, getUser } from "@/lib/actions";
 
 const selectedNetwork =
@@ -28,11 +27,11 @@ const particle = new ParticleNetwork({
 const particleProvider = new ParticleProvider(particle.auth);
 
 let ethersProvider: BrowserProvider | null = null;
-let ethersSigner: Promise<JsonRpcSigner> | null = null;
-if (typeof window !== "undefined") {
-  ethersProvider = new ethers.BrowserProvider(particleProvider, "any");
-  ethersSigner = ethersProvider.getSigner();
-}
+// let ethersSigner: Promise<JsonRpcSigner> | null = null;
+// if (typeof window !== "undefined") {
+ethersProvider = new ethers.BrowserProvider(particleProvider, "any");
+//   ethersSigner = ethersProvider.getSigner();
+// }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -61,11 +60,22 @@ export default function AuthProvider({
     }
   };
 
+  const getUserInfo = async () => {
+    try {
+      const userInfo = await particle.auth.getUserInfo();
+      return userInfo;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
   const [authInfo, setAuthInfo] = useState<AuthContextType | null>({
     isAuthenticated: false,
     user: null,
+    getUserInfo,
     ethers: ethersProvider,
-    ethersSigner: ethersSigner,
+    ethersSigner: () => null,
     login: handleLogin,
     logout: handleLogout,
   });
@@ -83,8 +93,9 @@ export default function AuthProvider({
       setAuthInfo({
         isAuthenticated: true,
         user,
+        getUserInfo,
         ethers: ethersProvider,
-        ethersSigner: ethersSigner,
+        ethersSigner: () => ethersProvider?.getSigner() ?? null,
         login: handleLogin,
         logout: handleLogout,
       });
@@ -97,8 +108,9 @@ export default function AuthProvider({
       setAuthInfo({
         isAuthenticated: false,
         user: null,
+        getUserInfo,
         ethers: ethersProvider,
-        ethersSigner: ethersSigner,
+        ethersSigner: () => ethersProvider?.getSigner() ?? null,
         login: handleLogin,
         logout: handleLogout,
       });
