@@ -15,6 +15,7 @@ import { Loader } from "lucide-react";
 import { particle } from "@/components/layout/AuthProvider";
 import ABI from "../../../../contract/PlutusABI.json";
 import { ethers } from "ethers";
+import { uploadToIPFS } from "@/lib/actions";
 
 export default function page() {
   const auth = useContext(AuthContext);
@@ -129,8 +130,14 @@ export default function page() {
     // UPLOAD AVATAR AND COVER TO IPFS
     const IPFS_URL = "https://rpc.particle.network/ipfs/upload";
     if (userData?.avatar.includes("data:image")) {
-      const data = await response.json();
-      userData.avatar = data.url;
+      // CONVERT BASE64 TO FILE
+      const blob = await fetch(userData?.avatar).then((res) => res.blob());
+      const file = new File([blob], "avatar.png", { type: "image/png" });
+
+      uploadToIPFS(file).then((res: any) => {
+        setUserData({ ...userData!, avatar: res });
+        console.log(" ", res);
+      });
     }
     // Generate the transaction data
     // const contract = new ethers.Contract(

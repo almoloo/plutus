@@ -3,7 +3,7 @@ import axios from "axios";
 
 const IPFS_URL = "https://rpc.particle.network/ipfs/upload";
 
-const uploadToIPFS = async (file: File) => {
+export const uploadToIPFS = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
   const response = await axios.post(IPFS_URL, formData, {
