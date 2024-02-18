@@ -12,11 +12,11 @@ import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import SocialLinkField from "@/components/dashboard/SocialLinkField";
 import { Loader } from "lucide-react";
-import { particle } from "@/components/layout/AuthProvider";
 import ABI from "../../../../contract/PlutusABI.json";
 import { ethers } from "ethers";
 import { uploadToIPFS } from "@/lib/actions";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function page() {
   const auth = useContext(AuthContext);
@@ -31,6 +31,7 @@ export default function page() {
   });
   const [loadingUserData, setLoadingUserData] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
   useEffect(() => {
     const getUser = async (address: string) => {
       if (auth?.user?.address) {
@@ -83,6 +84,7 @@ export default function page() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormLoading(true);
+    setLoadingMessage("Preparing to update your profile");
     // save data to smart contract
     const isTestnet = process.env.NEXT_PUBLIC_TESTNET === "true";
     const contractAddress = isTestnet
@@ -107,6 +109,7 @@ export default function page() {
     };
     try {
       if (dataToSubmit?.avatar?.includes("data:image")) {
+        setLoadingMessage("Uploading avatar to IPFS");
         const avatarFile = await convertB64toFile(
           dataToSubmit?.avatar,
           `${auth?.user?.address}-avatar.png`
@@ -124,6 +127,7 @@ export default function page() {
       }
 
       if (dataToSubmit?.cover?.includes("data:image")) {
+        setLoadingMessage("Uploading cover to IPFS");
         const coverFile = await convertB64toFile(
           dataToSubmit?.cover!,
           `${auth?.user?.address}-cover.png`
@@ -152,6 +156,9 @@ export default function page() {
 
       console.log("🪁", "contract", contract);
 
+      setLoadingMessage(
+        "Updating your profile on the blockchain, Click 'Continue' on the popup"
+      );
       const txn = await contract.RegisterUser(
         dataToSubmit?.name,
         dataToSubmit?.email,
@@ -375,6 +382,17 @@ export default function page() {
           </section>
         </div>
       </div>
+      {formLoading && (
+        <>
+          <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-slate-900/50">
+            <Alert className="mx-5 w-3/4 max-w-full lg:w-[500px]">
+              <Loader className="h-4 w-4 animate-spin" />
+              <AlertTitle>Updating your profile</AlertTitle>
+              <AlertDescription>{loadingMessage}</AlertDescription>
+            </Alert>
+          </div>
+        </>
+      )}
     </>
   );
 }
