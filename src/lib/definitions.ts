@@ -22,3 +22,17 @@ export interface User {
   created_at?: Date;
   address: string;
 }
+
+export interface SocialLink {
+  title: string;
+  url: string;
+}
+
+export interface UserData {
+  name: string;
+  email: string;
+  bio: string;
+  avatar: string;
+  cover: string;
+  links: SocialLink[];
+}

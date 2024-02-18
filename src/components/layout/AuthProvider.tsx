@@ -5,12 +5,11 @@ import { ParticleNetwork, WalletEntryPosition } from "@particle-network/auth";
 import { ParticleProvider } from "@particle-network/provider";
 import { AvalancheTestnet, Avalanche } from "@particle-network/chains";
 import { ethers } from "ethers";
-import type { BrowserProvider, JsonRpcSigner } from "ethers";
-import { createUser, getUser } from "@/lib/actions";
+import type { BrowserProvider } from "ethers";
 
 const selectedNetwork =
   process.env.NEXT_PUBLIC_TESTNET === "true" ? AvalancheTestnet : Avalanche;
-const particle = new ParticleNetwork({
+export const particle = new ParticleNetwork({
   projectId: process.env.NEXT_PUBLIC_PARTICLE_PROJECT_ID!,
   clientKey: process.env.NEXT_PUBLIC_PARTICLE_CLIENT_KEY!,
   appId: process.env.NEXT_PUBLIC_PARTICLE_APP_ID!,
@@ -99,11 +98,6 @@ export default function AuthProvider({
         login: handleLogin,
         logout: handleLogout,
       });
-      const userExists = await getUser(user.uuid);
-      if (!userExists) {
-        const createdUser = await createUser(user);
-        console.log("🎾", createdUser);
-      }
     } else {
       setAuthInfo({
         isAuthenticated: false,

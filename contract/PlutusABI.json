@@ -1,0 +1,264 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_wallet",
+				"type": "address"
+			}
+		],
+		"name": "Donate",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_public_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_bio",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_avatar_url",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_cover_url",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_links",
+				"type": "string"
+			}
+		],
+		"name": "RegisterUser",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_avatar",
+				"type": "string"
+			}
+		],
+		"name": "SetAvatarUrl",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_bio",
+				"type": "string"
+			}
+		],
+		"name": "SetBio",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_new_percent",
+				"type": "uint256"
+			}
+		],
+		"name": "SetContractFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_cover",
+				"type": "string"
+			}
+		],
+		"name": "SetCoverUrl",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_links",
+				"type": "string"
+			}
+		],
+		"name": "SetLinks",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "SetName",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			}
+		],
+		"name": "SetPublicEmail",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newOwner",
+				"type": "address"
+			}
+		],
+		"name": "TransferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "WithdrawContractBalance",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "contract_balance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "contract_fee_percent",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_wallet",
+				"type": "address"
+			}
+		],
+		"name": "GetUser",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "public_email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "bio",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "avatar_url",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "cover_url",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "links",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValue",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct Plutus.UserProfile",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

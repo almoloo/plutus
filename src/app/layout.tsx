@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Providers from "@/components/layout/Providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
           <Header />
           <main className="flex grow flex-col">{children}</main>
           <Footer />
+          <Toaster />
         </body>
       </html>
     </Providers>

@@ -7,8 +7,8 @@ export default function Footer() {
   return (
     <footer className="flex items-center justify-between border-b bg-neutral-100 py-5">
       <div className="container flex items-center justify-between">
-        <small className="flex items-center gap-1 text-neutral-700">
-          <Ampersand className="h-5 w-5 text-neutral-400" />
+        <small className="flex items-center gap-1 text-xs text-neutral-700 md:text-sm">
+          <Ampersand className="h-3 w-3 text-neutral-400 md:h-5 md:w-5" />
           {"Designed and developed by "}
           <Link href="https://github.com/almoloo">Ali</Link>
           {" & "}

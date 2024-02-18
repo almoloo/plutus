@@ -1,15 +1,5 @@
 import ConnectButton from "@/components/layout/ConnectButton";
-import {
-  ArrowLeft,
-  Dice1,
-  Dice2,
-  Dice3,
-  Dice4,
-  PencilRuler,
-  Share2,
-  Unplug,
-  Wallet,
-} from "lucide-react";
+import { ArrowLeft, PencilRuler, Share2, Unplug, Wallet } from "lucide-react";
 import { Exo_2 } from "next/font/google";
 import Link from "next/link";
 
@@ -50,13 +40,8 @@ export default function Home() {
       </section>
       <section className="container">
         <div>
-          {/* <h3
-            className={`mb-10 mt-5 text-center text-xl font-bold ${exo2.className}`}
-          >
-            Get Started
-          </h3> */}
-          <ul className="grid-cols-4 space-y-10 lg:grid lg:space-x-8 lg:space-y-0">
-            <li className="col-span-1 flex flex-col text-center">
+          <ul className="space-y-10 md:grid md:grid-cols-2 md:grid-rows-2 md:gap-16 md:space-y-0 lg:grid-cols-4 lg:gap-0 lg:space-x-8 lg:space-y-0">
+            <li className="col-span-1 flex flex-col text-center lg:text-left">
               <div className="flex flex-col items-center gap-4 space-x-2 lg:flex-row">
                 <Unplug className="h-8 w-8 text-neutral-500 lg:h-6 lg:w-6" />
                 <h4 className="text-lg font-medium lg:text-base">
@@ -75,7 +60,7 @@ export default function Home() {
                 }
               </small>
             </li>
-            <li className="col-span-1 flex flex-col text-center">
+            <li className="col-span-1 flex flex-col text-center lg:text-left">
               <div className="flex flex-col items-center gap-4 space-x-2 lg:flex-row">
                 <PencilRuler className="h-8 w-8 text-neutral-500 lg:h-6 lg:w-6" />
                 <h4 className="text-lg font-medium lg:text-base">
@@ -87,7 +72,7 @@ export default function Home() {
                 portfolio, and more.
               </small>
             </li>
-            <li className="col-span-1 flex flex-col text-center">
+            <li className="col-span-1 flex flex-col text-center lg:text-left">
               <div className="flex flex-col items-center gap-4 space-x-2 lg:flex-row">
                 <Share2 className="h-8 w-8 text-neutral-500 lg:h-6 lg:w-6" />
                 <h4 className="text-lg font-medium lg:text-base">
@@ -99,7 +84,7 @@ export default function Home() {
                 your reach.
               </small>
             </li>
-            <li className="col-span-1 flex flex-col text-center">
+            <li className="col-span-1 flex flex-col text-center lg:text-left">
               <div className="flex flex-col items-center gap-4 space-x-2 lg:flex-row">
                 <Wallet className="h-8 w-8 text-neutral-500 lg:h-6 lg:w-6" />
                 <h4 className="text-lg font-medium lg:text-base">
