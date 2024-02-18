@@ -16,6 +16,7 @@ import { particle } from "@/components/layout/AuthProvider";
 import ABI from "../../../../contract/PlutusABI.json";
 import { ethers } from "ethers";
 import { uploadToIPFS } from "@/lib/actions";
+import { toast } from "sonner";
 
 export default function page() {
   const auth = useContext(AuthContext);
@@ -48,43 +49,6 @@ export default function page() {
     getUser(auth?.user?.address!);
   }, [router, auth]);
 
-  // const [formValues, setFormValues] = useState({
-  //   name: userData?.name,
-  //   bio: userData?.bio,
-  //   links: userData?.links,
-  //   avatar: userData?.avatar,
-  //   cover: userData?.cover,
-  // });
-
-  // const form = useForm<z.infer<typeof formSchema>>({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues: {
-  //     name: userData?.name ?? auth?.user?.name ?? "",
-  //     bio: userData?.bio ?? "",
-  //     links: JSON.parse(userData?.links ?? "[]"),
-  //     avatar:
-  //       userData?.avatar !== ""
-  //         ? userData?.avatar
-  //         : process.env.NEXT_PUBLIC_DEFAULT_AVATAR,
-  //     cover:
-  //       userData?.cover !== ""
-  //         ? userData?.cover
-  //         : process.env.NEXT_PUBLIC_DEFAULT_COVER,
-  //   },
-  // });
-
-  // const { register } = form;
-
-  // useEffect(() => {
-  //   setFormValues({
-  //     name: form.getValues().name,
-  //     avatar: form.getValues().avatar,
-  //     cover: form.getValues().cover,
-  //     bio: form.getValues().bio,
-  //     links: form.getValues().links,
-  //   });
-  // }, [form.getValues()]);
-
   const handleAddLink = () => {
     setUserData({
       ...userData!,
@@ -103,9 +67,6 @@ export default function page() {
     const reader = new FileReader();
     reader.onloadend = () => {
       setUserData({ ...userData!, avatar: reader.result as string });
-      // const blob = new Blob([reader.result as string], { type: "image/png" });
-      // const file = new File([blob], 'avatar.png', { type: 'image/png' });
-      // setUserData({ ...userData!, avatar: URL.createObjectURL(blob) });
     };
     reader.readAsDataURL(file!);
   };
@@ -127,42 +88,86 @@ export default function page() {
     const contractAddress = isTestnet
       ? process.env.NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS
       : process.env.NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS;
+
+    const dataToSubmit = {
+      name: userData?.name,
+      email: userData?.email,
+      bio: userData?.bio,
+      avatar: userData?.avatar,
+      cover: userData?.cover,
+      links: userData?.links,
+    };
+
     // UPLOAD AVATAR AND COVER TO IPFS
     const IPFS_URL = "https://rpc.particle.network/ipfs/upload";
-    if (userData?.avatar.includes("data:image")) {
-      // CONVERT BASE64 TO FILE
-      const blob = await fetch(userData?.avatar).then((res) => res.blob());
-      const file = new File([blob], "avatar.png", { type: "image/png" });
+    const convertB64toFile = async (b64: string, filename: string) => {
+      const blob = await fetch(b64).then((res) => res.blob());
+      const file = new File([blob], filename, { type: "image/png" });
+      return file;
+    };
+    try {
+      if (dataToSubmit?.avatar?.includes("data:image")) {
+        const avatarFile = await convertB64toFile(
+          dataToSubmit?.avatar,
+          `${auth?.user?.address}-avatar.png`
+        );
+        const avatarFormData = new FormData();
+        avatarFormData.append("file", avatarFile);
 
-      uploadToIPFS(file).then((res: any) => {
-        setUserData({ ...userData!, avatar: res });
-        console.log(" ", res);
-      });
+        const avatarResponse = await uploadToIPFS(avatarFormData);
+        if (avatarResponse === null) {
+          throw new Error("Error uploading avatar image to IPFS");
+        }
+        setUserData({ ...userData!, avatar: await avatarResponse.cid });
+        dataToSubmit.avatar = await avatarResponse.cid;
+        console.log("🪁", "avatarResponse", avatarResponse);
+      }
+
+      if (dataToSubmit?.cover?.includes("data:image")) {
+        const coverFile = await convertB64toFile(
+          dataToSubmit?.cover!,
+          `${auth?.user?.address}-cover.png`
+        );
+        const coverFormData = new FormData();
+        coverFormData.append("file", coverFile);
+
+        const coverResponse = await uploadToIPFS(coverFormData);
+        if (coverResponse === null) {
+          throw new Error("Error uploading cover image to IPFS");
+        }
+        setUserData({ ...userData!, cover: await coverResponse.cid });
+        dataToSubmit.cover = await coverResponse.cid;
+        console.log("🪁", "coverResponse", coverResponse);
+      }
+
+      console.log("🪁", "userData", userData);
+
+      console.log(dataToSubmit);
+
+      const contract = new ethers.Contract(
+        contractAddress!,
+        ABI,
+        await auth?.ethersSigner()
+      );
+
+      console.log("🪁", "contract", contract);
+
+      const txn = await contract.RegisterUser(
+        dataToSubmit?.name,
+        dataToSubmit?.email,
+        dataToSubmit?.bio,
+        dataToSubmit?.avatar,
+        dataToSubmit?.cover,
+        JSON.stringify(dataToSubmit?.links)
+      );
+      console.log(txn);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating profile. Please try again.");
+    } finally {
+      toast.success("Profile updated successfully");
+      setFormLoading(false);
     }
-    // Generate the transaction data
-    // const contract = new ethers.Contract(
-    //   contractAddress!,
-    //   ABI,
-    //   await auth?.ethersSigner()
-    // );
-    // const txn = await contract.RegisterUser(
-    //   userData?.name,
-    //   userData?.email,
-    //   userData?.bio,
-    //   userData?.avatar,
-    //   userData?.cover,
-    //   JSON.stringify(userData?.links)
-    // );
-    // console.log(txn);
-
-    // console.log(auth?.ethers?.call({ to: smartContractAddress, data: "0x6d4ce63c" }));
-
-    // console.log(await auth?.ethersSigner);
-    // particle.evm.sendTransaction({
-    //   to: smartContractAddress,
-    //   data: "0x6d4ce63c",
-    // });
-    setFormLoading(false);
   };
   return (
     <>
