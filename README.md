@@ -1,4 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Puluts
+Web3 DApp: User Profiles & Donations
+
+This project was created for the **Avalanche Frontier: Decentralized Consumer Application Hackathon.**
+## Overview
+This project aims to build a decentralized application (DApp) where users can create profiles using Particle Auth and receive crypto donations. The DApp leverages Solidity for smart contracts and React for the frontend.
+
+[View Demo »](demo.com)
+
+## Features
+1. ### User Authentication:
+- Users can log in using their Google, Twitter, email, etc. (via Particle Auth
+- Wallet addresses serve as unique identifiers.
+
+2. ### Profile Creation:
+- Authenticated users can create their profiles.
+- Profile information includes name, bio, profile picture, etc.
+- All data saves on Avalanche network (Fuji Testnet)
+
+3. ### Profile Viewing: 
+- Other users can view profiles.
+- Profiles are publicly accessible via wallet addresses.
+
+4. ### Crypto Donations:
+- Users can donate cryptocurrency (AVAX) to other profiles.
+- Donations are recorded with Puluts smart contract.
+
+5. ### Owner’s Fee
+- The smart contract is ownable.
+- The owner can set a fee percentage for each donation received.
 
 ## Getting Started
 
@@ -20,17 +49,16 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Contributing
+Contributions are welcome! Feel free to submit pull requests or open issues.
 
-To learn more about Next.js, take a look at the following resources:
+## Contact Us
+For any inquiries or feedback, feel free to reach out to us:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-## Deploy on Vercel
+Ali Mousavi - [@almoloo](https://twitter.com/almoloo) - amousavig@icloud.com
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Hossein Arabi - [@hossein-79](https://github.com/Hossein-79) - ho.arabi79@gmail.com
