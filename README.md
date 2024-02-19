@@ -29,6 +29,11 @@ This project aims to build a decentralized application (DApp) where users can cr
 - The smart contract is ownable.
 - The owner can set a fee percentage for each donation received.
 
+## Technologies used
+1. NextJS
+2. Solidity
+3. Covalent Unified API to get smart contract events and show "New Users" and "Latest Transactions" on the dashboard
+
 ## Getting Started
 
 First, run the development server:
