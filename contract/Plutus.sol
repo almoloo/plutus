@@ -25,6 +25,10 @@ contract Plutus is Ownable{
         _;
     }
 
+    event NewUser(address indexed _wallet, UserProfile _profile);
+
+    event NewDonation(address indexed _wallet, address indexed _from, uint _value);
+
     constructor() {
         super;
     }
@@ -36,7 +40,14 @@ contract Plutus is Ownable{
         string memory _avatar_url,
         string memory _cover_url,
         string memory _links) public {
+        
+        bool is_old_user = user_list[msg.sender].isValue;
         user_list[msg.sender] = UserProfile(_name, _public_email, _bio, _avatar_url, _cover_url, _links, true);
+
+        if (!is_old_user)
+        {
+            emit NewUser(msg.sender, user_list[msg.sender]);
+        }
     }
 
     function GetUser(address _wallet) public view returns(UserProfile memory) {
@@ -50,7 +61,9 @@ contract Plutus is Ownable{
         contract_balance += contract_fee;
 
         bool sent = payable(_wallet).send(msg.value - contract_fee);
-        require(sent, "Failed to send Ether");
+        require(sent, "Failed to send AVAX");
+
+        emit NewDonation(_wallet, msg.sender, msg.value);
     }
     
     function SetName(string memory _name) public onlyRegistered {
