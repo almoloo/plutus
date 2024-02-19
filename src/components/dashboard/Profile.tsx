@@ -4,8 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link2 } from "lucide-react";
+import { Link2, Loader } from "lucide-react";
 import { toast } from "sonner";
+import {
+  FormEvent,
+  FormEventHandler,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { AuthContext } from "@/components/layout/AuthProvider";
+import { useRouter } from "next/navigation";
+import { ethers } from "ethers";
+import ABI from "../../../contract/PlutusABI.json";
 
 interface Props {
   isDummy?: boolean;
@@ -32,6 +43,70 @@ const handleCopyAddress = (address: string) => {
 };
 
 export default function Profile(props: Props) {
+  const auth = useContext(AuthContext);
+  const router = useRouter();
+  const [loadingLogin, setLoadingLogin] = useState(false);
+  const [canDonate, setCanDonate] = useState(false);
+  const [donateAmount, setDonateAmount] = useState("");
+  const [loadingDonate, setLoadingDonate] = useState(false);
+
+  useEffect(() => {
+    if (auth?.isAuthenticated) {
+      setCanDonate(true);
+    }
+  }, [auth?.isAuthenticated]);
+
+  const handleLogin = async () => {
+    setLoadingLogin(true);
+    try {
+      await auth?.login();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to login");
+    } finally {
+      setLoadingLogin(false);
+    }
+  };
+
+  const handleDonate = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!auth?.isAuthenticated) {
+      toast.error("Please login to donate");
+      return;
+    }
+    if (loadingDonate) return;
+    setLoadingDonate(true);
+    let amount = parseFloat(donateAmount);
+    const address = props.address;
+    if (isNaN(amount) || amount <= 0 || donateAmount === "") {
+      toast.error("Invalid amount");
+      return;
+    }
+    try {
+      const isTestnet = process.env.NEXT_PUBLIC_TESTNET === "true";
+      const contractAddress = isTestnet
+        ? process.env.NEXT_PUBLIC_TESTNET_CONTRACT_ADDRESS
+        : process.env.NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS;
+
+      const contract = new ethers.Contract(
+        contractAddress!,
+        ABI,
+        await auth?.ethersSigner()
+      );
+
+      const txn = await contract.Donate(address, {
+        value: ethers.parseEther(amount.toString()),
+      });
+      console.log(txn);
+      toast.success("Donation successful");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to donate");
+    } finally {
+      setLoadingDonate(false);
+    }
+  };
+
   return (
     <>
       <section className="w-full overflow-hidden rounded-lg border">
@@ -100,9 +175,37 @@ export default function Profile(props: Props) {
           <small className="text-sm text-neutral-600">
             Support me by donating some Avax.
           </small>
-          <form className="mt-4 flex gap-2">
-            <Input placeholder="Amount" inputMode="decimal" />
-            <Button variant="outline">Donate</Button>
+          <form className="mt-4 flex gap-2" onSubmit={handleDonate}>
+            {canDonate ? (
+              <>
+                <Input
+                  placeholder="Amount"
+                  inputMode="decimal"
+                  value={donateAmount}
+                  onChange={(e) => setDonateAmount(e.target.value)}
+                  disabled={loadingDonate}
+                  required
+                />
+                <Button variant="outline" disabled={loadingDonate}>
+                  {loadingDonate && (
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Donate
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={handleLogin}
+                type="button"
+              >
+                {loadingLogin && (
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Login to donate
+              </Button>
+            )}
           </form>
         </div>
       </section>

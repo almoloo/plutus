@@ -12,7 +12,7 @@ export const uploadToIPFS = async (formData: FormData) => {
       },
       auth: {
         username: process.env.NEXT_PUBLIC_PARTICLE_PROJECT_ID!,
-        password: process.env.NEXT_PUBLIC_PARTICLE_SERVER_KEY!,
+        password: process.env.PARTICLE_SERVER_KEY!,
       },
     });
     return response.data;

@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/components/layout/AuthProvider";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,11 @@ export default function ConnectButton({ size }: { size?: string }) {
   const auth = useContext(AuthContext);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [authenticated, setAuthenticated] = useState(auth?.isAuthenticated);
+
+  useEffect(() => {
+    setAuthenticated(auth?.isAuthenticated);
+  }, [auth?.isAuthenticated]);
 
   const handleConnect = async () => {
     try {
@@ -54,7 +59,7 @@ export default function ConnectButton({ size }: { size?: string }) {
 
   return (
     <>
-      {auth?.isAuthenticated ? (
+      {authenticated ? (
         <>
           <div className="md:hidden">
             <Drawer>

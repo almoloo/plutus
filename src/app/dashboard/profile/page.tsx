@@ -11,12 +11,13 @@ import { getUserData } from "@/lib/data";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import SocialLinkField from "@/components/dashboard/SocialLinkField";
-import { Loader } from "lucide-react";
+import { Copy, ExternalLink, Loader } from "lucide-react";
 import ABI from "../../../../contract/PlutusABI.json";
 import { ethers } from "ethers";
 import { uploadToIPFS } from "@/lib/actions";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
 
 export default function page() {
   const auth = useContext(AuthContext);
@@ -101,7 +102,6 @@ export default function page() {
     };
 
     // UPLOAD AVATAR AND COVER TO IPFS
-    const IPFS_URL = "https://rpc.particle.network/ipfs/upload";
     const convertB64toFile = async (b64: string, filename: string) => {
       const blob = await fetch(b64).then((res) => res.blob());
       const file = new File([blob], filename, { type: "image/png" });
@@ -123,7 +123,6 @@ export default function page() {
         }
         setUserData({ ...userData!, avatar: await avatarResponse.cid });
         dataToSubmit.avatar = await avatarResponse.cid;
-        console.log("🪁", "avatarResponse", avatarResponse);
       }
 
       if (dataToSubmit?.cover?.includes("data:image")) {
@@ -141,20 +140,13 @@ export default function page() {
         }
         setUserData({ ...userData!, cover: await coverResponse.cid });
         dataToSubmit.cover = await coverResponse.cid;
-        console.log("🪁", "coverResponse", coverResponse);
       }
-
-      console.log("🪁", "userData", userData);
-
-      console.log(dataToSubmit);
 
       const contract = new ethers.Contract(
         contractAddress!,
         ABI,
         await auth?.ethersSigner()
       );
-
-      console.log("🪁", "contract", contract);
 
       setLoadingMessage(
         "Updating your profile on the blockchain, Click 'Continue' on the popup"
@@ -180,7 +172,7 @@ export default function page() {
     <>
       {/* <p>{JSON.stringify(userData)}</p> */}
       <div className="container my-16">
-        <div className="grid grid-cols-6 gap-5">
+        <div className="flex grid-cols-6 flex-col gap-5 lg:grid">
           <section className="col-span-3">
             <div className="mb-5">
               <h2 className="mb-2 text-2xl font-bold">
@@ -361,23 +353,60 @@ export default function page() {
             {loadingUserData ? (
               <Skeleton className="h-2/3" />
             ) : (
-              <Profile
-                isDummy
-                cover={
-                  userData?.cover.includes("data:image")
-                    ? userData?.cover
-                    : `https://ipfs.particle.network/${userData?.cover}`
-                }
-                avatar={
-                  userData?.avatar.includes("data:image")
-                    ? userData?.avatar
-                    : `https://ipfs.particle.network/${userData?.avatar}`
-                }
-                name={userData?.name!}
-                description={userData?.bio}
-                links={userData?.links}
-                address={auth?.user?.address!}
-              />
+              <>
+                <Profile
+                  isDummy
+                  cover={
+                    userData?.cover.includes("data:image")
+                      ? userData?.cover
+                      : `https://ipfs.particle.network/${userData?.cover}`
+                  }
+                  avatar={
+                    userData?.avatar.includes("data:image")
+                      ? userData?.avatar
+                      : `https://ipfs.particle.network/${userData?.avatar}`
+                  }
+                  name={userData?.name!}
+                  description={userData?.bio}
+                  links={userData?.links}
+                  address={auth?.user?.address!}
+                />
+                <div className="mt-5 rounded border bg-neutral-50 p-4">
+                  <h3 className="mb-2 text-sm font-medium">
+                    Your unique address:
+                  </h3>
+                  <div className="mb-2 flex items-center gap-2">
+                    <Input
+                      value={`${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`}
+                      readOnly
+                    />
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`
+                        );
+                        toast.success("Copied to clipboard");
+                      }}
+                      size="icon"
+                      variant="outline"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Link
+                      href={`${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`}
+                      passHref
+                    >
+                      <Button size="icon" variant="outline">
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                  <small className="text-neutral-500">
+                    You can add this address to your website or social media to
+                    link to your profile.
+                  </small>
+                </div>
+              </>
             )}
           </section>
         </div>
