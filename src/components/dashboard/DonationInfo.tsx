@@ -76,7 +76,7 @@ export default function DonationInfo({ from, to, amount, className }: Props) {
             </Link>
           </div>
           <div className="row-span-1 flex items-center justify-center bg-neutral-50 text-sm">
-            {amount} AVAX
+            {parseFloat(amount) * 0.000000000000000001} AVAX
           </div>
         </>
       )}
