@@ -15,7 +15,7 @@ import DonationInfo from "@/components/dashboard/DonationInfo";
 export default function page() {
   const router = useRouter();
   const auth = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [allEvents, setAllEvents] = useState<{
     newUsers: ParsedNewUserEvent[];
