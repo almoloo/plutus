@@ -33,6 +33,7 @@ export default function page() {
   const [loadingUserData, setLoadingUserData] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const [profileExists, setProfileExists] = useState(false);
   useEffect(() => {
     const getUser = async (address: string) => {
       if (auth?.user?.address) {
@@ -40,6 +41,7 @@ export default function page() {
           const savedData = await getUserData(address);
           if (savedData) {
             setUserData(savedData);
+            setProfileExists(true);
           }
         } catch (error) {
           console.error(error);
@@ -371,41 +373,45 @@ export default function page() {
                   links={userData?.links}
                   address={auth?.user?.address!}
                 />
-                <div className="mt-5 rounded border bg-neutral-50 p-4">
-                  <h3 className="mb-2 text-sm font-medium">
-                    Your unique address:
-                  </h3>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Input
-                      value={`${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`}
-                      readOnly
-                    />
-                    <Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          `${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`
-                        );
-                        toast.success("Copied to clipboard");
-                      }}
-                      size="icon"
-                      variant="outline"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <Link
-                      href={`${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`}
-                      passHref
-                    >
-                      <Button size="icon" variant="outline">
-                        <ExternalLink className="h-4 w-4" />
+                {/* ----- PROFILE URL ----- */}
+                {profileExists && (
+                  <div className="mt-5 rounded border bg-neutral-50 p-4">
+                    <h3 className="mb-2 text-sm font-medium">
+                      Your unique address:
+                    </h3>
+                    <div className="mb-2 flex items-center gap-2">
+                      <Input
+                        value={`${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`}
+                        readOnly
+                      />
+                      <Button
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            `${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`
+                          );
+                          toast.success("Copied to clipboard");
+                        }}
+                        size="icon"
+                        variant="outline"
+                      >
+                        <Copy className="h-4 w-4" />
                       </Button>
-                    </Link>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_DOMAIN}/${auth?.user?.address}`}
+                        target="_blank"
+                        passHref
+                      >
+                        <Button size="icon" variant="outline">
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                    <small className="text-neutral-500">
+                      You can add this address to your website or social media
+                      to link to your profile.
+                    </small>
                   </div>
-                  <small className="text-neutral-500">
-                    You can add this address to your website or social media to
-                    link to your profile.
-                  </small>
-                </div>
+                )}
               </>
             )}
           </section>

@@ -60,7 +60,7 @@ export const getAddressTransactions = async (
   page?: number
 ) => {
   try {
-    const client = new CovalentClient(process.env.COVALENT_API_KEY!);
+    // const client = new CovalentClient(process.env.COVALENT_API_KEY!);
     const chain = isTestnet
       ? Chains.AVALANCHE_TESTNET
       : Chains.AVALANCHE_MAINNET;
@@ -101,6 +101,92 @@ export const getAllTransactions = async (address: string) => {
       pageTransactions = await getAddressTransactions(address, currentPage);
     }
     return transactions;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const getAllEvents = async () => {
+  try {
+    const iFace = new ethers.Interface(ABI);
+    const chain = isTestnet
+      ? Chains.AVALANCHE_TESTNET
+      : Chains.AVALANCHE_MAINNET;
+
+    const headers = new Headers();
+    headers.set("Authorization", `Bearer ${process.env.COVALENT_API_KEY}`);
+
+    const response = await fetch(
+      `https://api.covalenthq.com/v1/${chain}/events/address/${contractAddress}/?starting-block=${process.env.STARTING_BLOCK}`,
+      {
+        method: "get",
+        headers: headers,
+      }
+    );
+    const data = await response.json();
+    const events = data.data.items;
+
+    enum EventType {
+      NewUser = "NewUser",
+      NewDonation = "NewDonation",
+    }
+
+    interface ParsedNewUserEvent {
+      name: string;
+      email: string;
+      bio: string;
+      avatar: string;
+      cover: string;
+      links: string[];
+    }
+
+    interface ParsedNewDonationEvent {
+      to: string;
+      from: string;
+      amount: number;
+    }
+
+    const parsedEvents: {
+      newUsers: ParsedNewUserEvent[];
+      newDonations: ParsedNewDonationEvent[];
+    } = {
+      newUsers: [],
+      newDonations: [],
+    };
+
+    events.forEach((event: any) => {
+      const raw = event.raw_log_data;
+      const topics = event.raw_log_topics;
+      const eventType: EventType =
+        topics.length === 3 ? EventType.NewDonation : EventType.NewUser;
+
+      if (eventType === EventType.NewUser) {
+        const newUserParse = iFace.decodeEventLog("NewUser", raw, topics);
+        const newUserObj = {
+          name: newUserParse[1][0],
+          email: newUserParse[1][1],
+          bio: newUserParse[1][2],
+          avatar: newUserParse[1][3],
+          cover: newUserParse[1][4],
+          links: JSON.parse(newUserParse[1][5]),
+        };
+        parsedEvents.newUsers.push(newUserObj);
+      } else if (eventType === EventType.NewDonation) {
+        const newDonationParse = iFace.decodeEventLog(
+          "NewDonation",
+          raw,
+          topics
+        );
+        const newDonationObj = {
+          to: newDonationParse[0],
+          from: newDonationParse[1],
+          amount: newDonationParse[2],
+        };
+        parsedEvents.newDonations.push(newDonationObj);
+      }
+    });
+    return parsedEvents;
   } catch (error) {
     console.error(error);
     return null;

@@ -48,8 +48,8 @@ export default function page({ params }: { params: { address: string } }) {
     prepareProfile();
   }, [router, params.address]);
   return (
-    <div className="container my-5 grid-cols-5 justify-center lg:grid">
-      <div className="flex flex-col lg:col-span-3 lg:col-start-2">
+    <div className="container my-auto justify-center">
+      <div className="flex flex-col @container">
         {loading ? (
           <div className="flex items-center justify-center">
             <Loader size={64} className="animate-spin" />

@@ -1,5 +1,91 @@
 [
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_wallet",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_value",
+				"type": "uint256"
+			}
+		],
+		"name": "NewDonation",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_wallet",
+				"type": "address"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "public_email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "bio",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "avatar_url",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "cover_url",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "links",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValue",
+						"type": "bool"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct Plutus.UserProfile",
+				"name": "_profile",
+				"type": "tuple"
+			}
+		],
+		"name": "NewUser",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -10,6 +96,62 @@
 		"name": "Donate",
 		"outputs": [],
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_wallet",
+				"type": "address"
+			}
+		],
+		"name": "GetUser",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "public_email",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "bio",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "avatar_url",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "cover_url",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "links",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isValue",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct Plutus.UserProfile",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -156,11 +298,6 @@
 	},
 	{
 		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
 		"name": "WithdrawContractBalance",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -187,62 +324,6 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_wallet",
-				"type": "address"
-			}
-		],
-		"name": "GetUser",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "public_email",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "bio",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "avatar_url",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "cover_url",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "links",
-						"type": "string"
-					},
-					{
-						"internalType": "bool",
-						"name": "isValue",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct Plutus.UserProfile",
-				"name": "",
-				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
