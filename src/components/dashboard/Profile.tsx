@@ -98,7 +98,8 @@ export default function Profile(props: Props) {
         value: ethers.parseEther(amount.toString()),
       });
       console.log(txn);
-      toast.success("Donation successful");
+      setDonateAmount("");
+      toast.success("Donation successful. Thank you! 🎉");
     } catch (error) {
       console.error(error);
       toast.error("Failed to donate");
