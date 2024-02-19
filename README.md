@@ -5,7 +5,7 @@ This project was created for the **Avalanche Frontier: Decentralized Consumer Ap
 ## Overview
 This project aims to build a decentralized application (DApp) where users can create profiles using Particle Auth and receive crypto donations. The DApp leverages Solidity for smart contracts and React for the frontend.
 
-[View Demo »](demo.com)
+[View Demo »](https://plutus-ashy.vercel.app/)
 
 ## Features
 1. ### User Authentication:
