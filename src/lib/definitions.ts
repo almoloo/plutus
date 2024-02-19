@@ -36,3 +36,19 @@ export interface UserData {
   cover: string;
   links: SocialLink[];
 }
+
+export interface ParsedNewUserEvent {
+  address: string;
+  name: string;
+  email: string;
+  bio: string;
+  avatar: string;
+  cover: string;
+  links: string[];
+}
+
+export interface ParsedNewDonationEvent {
+  to: string;
+  from: string;
+  amount: any;
+}

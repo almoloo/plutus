@@ -2,7 +2,11 @@
 
 import { ethers } from "ethers";
 import ABI from "../../contract/PlutusABI.json";
-import { UserData } from "@/lib/definitions";
+import {
+  ParsedNewDonationEvent,
+  ParsedNewUserEvent,
+  UserData,
+} from "@/lib/definitions";
 import { CovalentClient, Chains } from "@covalenthq/client-sdk";
 
 /*
@@ -132,21 +136,6 @@ export const getAllEvents = async () => {
       NewDonation = "NewDonation",
     }
 
-    interface ParsedNewUserEvent {
-      name: string;
-      email: string;
-      bio: string;
-      avatar: string;
-      cover: string;
-      links: string[];
-    }
-
-    interface ParsedNewDonationEvent {
-      to: string;
-      from: string;
-      amount: number;
-    }
-
     const parsedEvents: {
       newUsers: ParsedNewUserEvent[];
       newDonations: ParsedNewDonationEvent[];
@@ -164,6 +153,7 @@ export const getAllEvents = async () => {
       if (eventType === EventType.NewUser) {
         const newUserParse = iFace.decodeEventLog("NewUser", raw, topics);
         const newUserObj = {
+          address: newUserParse[0],
           name: newUserParse[1][0],
           email: newUserParse[1][1],
           bio: newUserParse[1][2],
