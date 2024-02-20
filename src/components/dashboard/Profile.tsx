@@ -61,6 +61,15 @@ export default function Profile(props: Props) {
     }
   };
 
+  const isValidUrl = (url: string) => {
+    try {
+      new URL(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   const handleDonate = async (e: FormEvent) => {
     e.preventDefault();
     if (!auth?.isAuthenticated) {
@@ -170,7 +179,12 @@ export default function Profile(props: Props) {
           {props.links && !props.tiny && (
             <div className="flex flex-col gap-1 p-4">
               {props.links.map((link, index) => (
-                <Link key={index} href={link.url} className="" passHref>
+                <Link
+                  key={index}
+                  href={isValidUrl(link.url) ? link.url : ""}
+                  className=""
+                  passHref
+                >
                   <Button className="w-full" variant="outline">
                     {link.title}
                   </Button>
