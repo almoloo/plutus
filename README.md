@@ -3,6 +3,7 @@ Web3 DApp: User Profiles & Donations
 
 This project was created for the **Avalanche Frontier: Decentralized Consumer Application Hackathon.**
 ## Overview
+[![Screenshot 1][product-screenshot]](https://luxo.vercel.app)
 The Avalanche Profile Dapp is a revolutionary decentralized application (dapp) built on the Avalanche network, aiming to empower individuals to create and share their profiles securely and autonomously. Leveraging the capabilities of Particle Network Auth for authentication and the high-performance Avalanche blockchain for transactions, this dapp provides a seamless experience for users to showcase their work, talents, or interests while enabling them to receive donations in AVAX directly.
 
 ## How It Works
@@ -89,3 +90,5 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 Ali Mousavi - [@almoloo](https://twitter.com/almoloo) - amousavig@icloud.com
 
 Hossein Arabi - [@hossein-79](https://github.com/Hossein-79) - ho.arabi79@gmail.com
+
+[product-screenshot]: hero.png
