@@ -161,12 +161,13 @@ export default function page() {
         dataToSubmit?.cover,
         JSON.stringify(dataToSubmit?.links)
       );
+      toast.success("Profile updated successfully");
+      setProfileExists(true);
       console.log(txn);
     } catch (error) {
       console.error(error);
       toast.error("Error updating profile. Please try again.");
     } finally {
-      toast.success("Profile updated successfully");
       setFormLoading(false);
     }
   };
